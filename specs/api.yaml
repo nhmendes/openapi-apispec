@@ -1,0 +1,23 @@
+openapi: 3.0.0
+info:
+  title: Customer user API
+  description: API for managing customer users (for now only guest users) - please update this description after having registered users.
+  version: v1
+  contact:
+    name: 'Tillster, Inc.'
+servers:
+  - url: http://127.0.0.1:4010
+    description: Mock Server
+tags:
+  - name: Users
+paths:
+  /users:
+    $ref: './components/paths/users/user.yaml'
+  /users/{id}:
+    $ref: './components/paths/users/user-by-id.yaml'
+components:
+  schemas:
+    User:
+      $ref: 'components/schemas/user.yaml#/components/schemas/User'
+    PagedUser:
+      $ref: 'components/schemas/pagedUser.yaml#/components/schemas/PagedUser'

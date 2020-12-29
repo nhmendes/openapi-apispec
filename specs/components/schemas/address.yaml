@@ -1,0 +1,29 @@
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        address:
+          type: string
+          nullable: true
+        address_2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        postcode:
+          type: string
+          nullable: true
+        latitude:
+          type: string
+          nullable: true
+        longitude:
+          type: string
+          nullable: true
+      additionalProperties:
+        type: object
+        additionalProperties: false

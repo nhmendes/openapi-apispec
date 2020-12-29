@@ -1,0 +1,20 @@
+{
+  "name": "flask-restapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "mock": "npm run bundle; npm run lint; npm run prism-mock",
+
+    "prism-mock": "npm run lint; npm run bundle; prism mock ./output/api.yaml -d",
+    "lint": "spectral lint ./output/api.yaml --ignore-unknown-format",
+    "bundle": "swagger-cli bundle specs/api.yaml -o ./output/api.yaml -t yaml"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@stoplight/prism-cli": "^4.1.2"
+  },
+  "author": "Nuno Mendes",
+  "license": "MIT"
+}

@@ -1,0 +1,40 @@
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - tenant_id
+        - email
+        - phone_number
+        - first_name
+      properties:
+        user_id:
+          description: User unique identifier
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_id:
+          description: Tenant ID
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          description: Email
+          type: string
+          format: email
+          example: guest@somemail.com
+        phone_number:
+          description: Phone Number
+          type: string
+          example: (858)784-0800
+        first_name:
+          description: First name
+          type: string
+        last_name:
+          description: Last name
+          type: string
+        address:
+          description: user address
+          type: object
+          $ref: 'address.yaml#/components/schemas/Address'
+      additionalProperties: false

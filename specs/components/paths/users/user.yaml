@@ -1,0 +1,52 @@
+get:
+  operationId: get-users
+  summary: Returns a paged list of users.
+  description: Returns a paged list of active users
+  tags:
+    - Users
+  parameters:
+    - $ref: '../../parameters/page-parameters.yaml#/components/parameters/page'
+    - $ref: '../../parameters/page-parameters.yaml#/components/parameters/pageSize'
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/pagedUser.yaml#/components/schemas/PagedUser'
+    '500':
+      description: Internal Server Error
+post:
+  operationId: create-user
+  summary: Create a user
+  description: Create a new user
+  tags:
+    - Users
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/user.yaml#/components/schemas/User'
+  responses:
+    '201':
+      description: Created
+      headers:
+        Location:
+          description: 'Location of the created User /users/{id}'
+          schema:
+            type: string
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '409':
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '500':
+      description: Internal Server Error

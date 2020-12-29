@@ -1,0 +1,72 @@
+get:
+  operationId: get-user
+  summary: Get user by id
+  description: Return a user
+  tags:
+    - Users
+  parameters:
+    - in: path
+      name: id
+      description: user id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/user.yaml#/components/schemas/User'
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '500':
+      description: Internal Server Error
+put:
+  operationId: update-user
+  summary: Updates a user
+  description: Updates a user
+  tags:
+    - Users
+  parameters:
+    - in: path
+      name: id
+      description: user id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/user.yaml#/components/schemas/User'
+  responses:
+    '204':
+      description: No Content
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '404':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '409':
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/error-details.yaml#/components/schemas/ErrorDetails'
+    '500':
+      description: Internal Server Error
