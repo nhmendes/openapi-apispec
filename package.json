@@ -5,10 +5,8 @@
   "main": "index.js",
   "scripts": {
     "mock": "npm run generate; npm run prism-mock",
-    
     "generate": "npm run bundle; npm run lint; npm run diff-script;",
     "diff-script": "node ./specs/spec-diff.js",
-
     "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/api.yaml -d",
     "lint": "spectral lint ./bin/api.yaml --ignore-unknown-format",
     "bundle": "swagger-cli bundle specs/api.yaml -o ./bin/api.yaml -t yaml"

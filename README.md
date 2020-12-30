@@ -28,7 +28,29 @@ Following a standard pattern for URLs, resource types, request methods, headers,
 
 APIs must be self-descriptive by using hypermedia constructs like links that allow the discovery of other API resources.
 
-### Requirements
+## Using this sample API first spec project
+
+### To setup all dependencies
+
+```sh
+npm install
+```
+
+### To generate the final API spec yaml file
+
+```sh
+npm run generate
+```
+
+The above command will also check for differences between current and new spec.
+
+### To start the mock server based on this API spec file
+
+```sh
+npm run mock
+```
+
+## Requirements
 
 - nodejs
 
@@ -48,7 +70,7 @@ sudo npm install -g swagger-cli
 npm install @stoplight/spectral
 ```
 
-### npm init your apispec project
+## npm init your apispec project
 
 ```sh
 npm init
