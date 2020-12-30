@@ -1,0 +1,257 @@
+openapi: 3.0.0
+info:
+  title: Customer user API
+  description: API for managing customer users (for now only guest users) - please update this description after having registered users.
+  version: v1
+  contact:
+    name: 'Tillster, Inc.'
+servers:
+  - url: 'http://127.0.0.1:4010'
+    description: Mock Server
+tags:
+  - name: Users
+paths:
+  /users:
+    get:
+      operationId: get-users
+      summary: Returns a paged list of users.
+      description: Returns a paged list of active users
+      tags:
+        - Users
+      parameters:
+        - in: query
+          description: Desired page
+          name: page
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            minimum: 1
+            maximum: 2147483647
+        - in: query
+          description: Desired quantity of items per page
+          name: pageSize
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 10
+            maximum: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedUser'
+        '500':
+          description: Internal Server Error
+    post:
+      operationId: create-user
+      summary: Create a user
+      description: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              description: 'Location of the created User /users/{id}'
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    nullable: true
+                  title:
+                    type: string
+                    nullable: true
+                  status:
+                    type: integer
+                    format: int32
+                    nullable: true
+                  detail:
+                    type: string
+                    nullable: true
+                  instance:
+                    type: string
+                    nullable: true
+                additionalProperties:
+                  type: object
+                  additionalProperties: false
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+        '500':
+          description: Internal Server Error
+  '/users/{id}':
+    get:
+      operationId: get-user
+      summary: Get user by id
+      description: Return a user
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+        '500':
+          description: Internal Server Error
+    put:
+      operationId: update-user
+      summary: Updates a user
+      description: Updates a user
+      tags:
+        - Users
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - tenant_id
+        - email
+        - phone_number
+        - first_name
+      properties:
+        user_id:
+          description: User unique identifier
+          type: string
+          format: uuid
+          readOnly: true
+        tenant_id:
+          description: Tenant ID
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          description: Email
+          type: string
+          format: email
+          example: guest@somemail.com
+        phone_number:
+          description: Phone Number
+          type: string
+          example: (858)784-0800
+        first_name:
+          description: First name
+          type: string
+        last_name:
+          description: Last name
+          type: string
+        address:
+          description: user address
+          type: object
+          properties:
+            address:
+              type: string
+              nullable: true
+            address_2:
+              type: string
+              nullable: true
+            city:
+              type: string
+              nullable: true
+            state:
+              type: string
+              nullable: true
+            postcode:
+              type: string
+              nullable: true
+            latitude:
+              type: string
+              nullable: true
+            longitude:
+              type: string
+              nullable: true
+          additionalProperties:
+            type: object
+            additionalProperties: false
+      additionalProperties: false
+    PagedUser:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        totalOfPages:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2147483647
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      additionalProperties: false

@@ -1,19 +1,22 @@
 {
-  "name": "flask-restapi",
+  "name": "openapi-apispec",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "mock": "npm run bundle; npm run lint; npm run prism-mock",
+    "mock": "npm run generate; npm run prism-mock",
+    
+    "generate": "npm run bundle; npm run lint; npm run diff-script;",
+    "diff-script": "node ./specs/spec-diff.js",
 
-    "prism-mock": "npm run lint; npm run bundle; prism mock ./output/api.yaml -d",
-    "lint": "spectral lint ./output/api.yaml --ignore-unknown-format",
-    "bundle": "swagger-cli bundle specs/api.yaml -o ./output/api.yaml -t yaml"
+    "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/api.yaml -d",
+    "lint": "spectral lint ./bin/api.yaml --ignore-unknown-format",
+    "bundle": "swagger-cli bundle specs/api.yaml -o ./bin/api.yaml -t yaml"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@stoplight/prism-cli": "^4.1.2"
+    "@stoplight/prism-cli": "^4.1.2",
+    "openapi-diff": "^0.23.4"
   },
   "author": "Nuno Mendes",
   "license": "MIT"

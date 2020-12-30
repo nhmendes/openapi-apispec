@@ -116,4 +116,4 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/node
 
 # ignore output from bundled spec yaml files
-output
+bin
