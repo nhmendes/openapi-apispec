@@ -123,7 +123,20 @@ We can also take advantage and add this in the process of continuous integration
 
 ## prism-mock
 
-TODO: add details about prism mock here
+You can fire-up a mock service using just the API Spec using a tool like **prism-mock**
+
+For starting a mock service in a local machine you can just execute this command (see package.json):
+
+```sh
+npm run mock
+```
+
+In this project the **mock** script will:
+
+- bundle
+- validate linting errors
+- check diffs for breaking changes
+- start a mock service with some sample URLs for local usage
 
 ### To help write your readme file
 
