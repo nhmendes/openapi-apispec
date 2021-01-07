@@ -3,7 +3,7 @@ components:
     Address:
       type: object
       properties:
-        address:
+        address_1:
           type: string
           nullable: true
         address_2:

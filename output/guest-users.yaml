@@ -9,15 +9,15 @@ servers:
   - url: 'http://127.0.0.1:4010'
     description: Mock Server
 tags:
-  - name: Users
+  - name: Guest Users
 paths:
-  /users:
+  /guest-users:
     get:
       operationId: get-users
       summary: Returns a paged list of users.
       description: Returns a paged list of active users
       tags:
-        - Users
+        - Guest Users
       parameters:
         - in: query
           description: Desired page
@@ -43,7 +43,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedUser'
+                $ref: '#/components/schemas/PagedGuestUser'
         '500':
           description: Internal Server Error
     post:
@@ -51,13 +51,13 @@ paths:
       summary: Create a user
       description: Create a new user
       tags:
-        - Users
+        - Guest Users
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/GuestUser'
       responses:
         '201':
           description: Created
@@ -97,16 +97,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+                $ref: '#/paths/~1guest-users/post/responses/400/content/application~1json/schema'
         '500':
           description: Internal Server Error
-  '/users/{id}':
+  '/guest-users/{id}':
     get:
       operationId: get-user
       summary: Get user by id
       description: Return a user
       tags:
-        - Users
+        - Guest Users
       parameters:
         - in: path
           name: id
@@ -121,13 +121,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/GuestUser'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+                $ref: '#/paths/~1guest-users/post/responses/400/content/application~1json/schema'
         '500':
           description: Internal Server Error
     put:
@@ -135,7 +135,7 @@ paths:
       summary: Updates a user
       description: Updates a user
       tags:
-        - Users
+        - Guest Users
       parameters:
         - in: path
           name: id
@@ -149,7 +149,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/GuestUser'
       responses:
         '204':
           description: No Content
@@ -158,24 +158,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+                $ref: '#/paths/~1guest-users/post/responses/400/content/application~1json/schema'
         '404':
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+                $ref: '#/paths/~1guest-users/post/responses/400/content/application~1json/schema'
         '409':
           description: Conflict
           content:
             application/json:
               schema:
-                $ref: '#/paths/~1users/post/responses/400/content/application~1json/schema'
+                $ref: '#/paths/~1guest-users/post/responses/400/content/application~1json/schema'
         '500':
           description: Internal Server Error
 components:
   schemas:
-    User:
+    GuestUser:
       type: object
       required:
         - tenant_id
@@ -184,7 +184,7 @@ components:
         - first_name
       properties:
         user_id:
-          description: User unique identifier
+          description: Guest User unique identifier
           type: string
           format: uuid
           readOnly: true
@@ -212,7 +212,7 @@ components:
           description: user address
           type: object
           properties:
-            address:
+            address_1:
               type: string
               nullable: true
             address_2:
@@ -237,7 +237,7 @@ components:
             type: object
             additionalProperties: false
       additionalProperties: false
-    PagedUser:
+    PagedGuestUser:
       type: object
       properties:
         total:
@@ -253,5 +253,5 @@ components:
         values:
           type: array
           items:
-            $ref: '#/components/schemas/User'
+            $ref: '#/components/schemas/GuestUser'
       additionalProperties: false

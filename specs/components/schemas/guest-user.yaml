@@ -1,6 +1,6 @@
 components:
   schemas:
-    User:
+    GuestUser:
       type: object
       required:
         - tenant_id
@@ -9,7 +9,7 @@ components:
         - first_name
       properties:
         user_id:
-          description: User unique identifier
+          description: Guest User unique identifier
           type: string
           format: uuid
           readOnly: true

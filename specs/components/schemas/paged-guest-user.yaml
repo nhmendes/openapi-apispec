@@ -1,6 +1,6 @@
 components:
   schemas:
-    PagedUser:
+    PagedGuestUser:
       type: object
       properties:
         total:
@@ -16,5 +16,5 @@ components:
         values:
           type: array
           items:
-            $ref: 'user.yaml#/components/schemas/User'
+            $ref: 'guest-user.yaml#/components/schemas/GuestUser'
       additionalProperties: false

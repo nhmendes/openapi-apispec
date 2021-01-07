@@ -3,7 +3,7 @@ get:
   summary: Returns a paged list of users.
   description: Returns a paged list of active users
   tags:
-    - Users
+    - Guest Users
   parameters:
     - $ref: '../../parameters/page-parameters.yaml#/components/parameters/page'
     - $ref: '../../parameters/page-parameters.yaml#/components/parameters/pageSize'
@@ -13,7 +13,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/pagedUser.yaml#/components/schemas/PagedUser'
+            $ref: '../../schemas/paged-guest-user.yaml#/components/schemas/PagedGuestUser'
     '500':
       description: Internal Server Error
 post:
@@ -21,13 +21,13 @@ post:
   summary: Create a user
   description: Create a new user
   tags:
-    - Users
+    - Guest Users
   requestBody:
     required: true
     content:
       application/json:
         schema:
-          $ref: '../../schemas/user.yaml#/components/schemas/User'
+          $ref: '../../schemas/guest-user.yaml#/components/schemas/GuestUser'
   responses:
     '201':
       description: Created

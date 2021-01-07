@@ -3,7 +3,7 @@ get:
   summary: Get user by id
   description: Return a user
   tags:
-    - Users
+    - Guest Users
   parameters:
     - in: path
       name: id
@@ -18,7 +18,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/user.yaml#/components/schemas/User'
+            $ref: '../../schemas/guest-user.yaml#/components/schemas/GuestUser'
     '404':
       description: Not Found
       content:
@@ -32,7 +32,7 @@ put:
   summary: Updates a user
   description: Updates a user
   tags:
-    - Users
+    - Guest Users
   parameters:
     - in: path
       name: id
@@ -46,7 +46,7 @@ put:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/user.yaml#/components/schemas/User'
+          $ref: '../../schemas/guest-user.yaml#/components/schemas/GuestUser'
   responses:
     '204':
       description: No Content
