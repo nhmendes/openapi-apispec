@@ -24,6 +24,9 @@ components:
         longitude:
           type: string
           nullable: true
+        address_type:
+          type: string
+          nullable: true
       additionalProperties:
         type: object
         additionalProperties: false

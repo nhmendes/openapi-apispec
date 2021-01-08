@@ -6,7 +6,6 @@ components:
         - tenant_id
         - email
         - phone_number
-        - first_name
       properties:
         user_id:
           description: Guest User unique identifier
