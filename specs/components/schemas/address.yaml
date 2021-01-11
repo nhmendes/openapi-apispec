@@ -18,15 +18,12 @@ components:
         postcode:
           type: string
           nullable: true
-        latitude:
-          type: string
-          nullable: true
-        longitude:
-          type: string
-          nullable: true
         address_type:
           type: string
           nullable: true
+        geolocation:
+          description: address geolocation (longitude / latitude)
+          type: object
+          $ref: 'geolocation.yaml#/components/schemas/Geolocation'
       additionalProperties:
-        type: object
         additionalProperties: false

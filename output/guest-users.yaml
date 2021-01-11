@@ -90,7 +90,6 @@ paths:
                     type: string
                     nullable: true
                 additionalProperties:
-                  type: object
                   additionalProperties: false
         '409':
           description: Conflict
@@ -226,17 +225,22 @@ components:
             postcode:
               type: string
               nullable: true
-            latitude:
-              type: string
-              nullable: true
-            longitude:
-              type: string
-              nullable: true
             address_type:
               type: string
               nullable: true
+            geolocation:
+              description: address geolocation (longitude / latitude)
+              type: object
+              properties:
+                latitude:
+                  type: number
+                  nullable: true
+                longitude:
+                  type: number
+                  nullable: true
+              additionalProperties:
+                additionalProperties: false
           additionalProperties:
-            type: object
             additionalProperties: false
       additionalProperties: false
     PagedGuestUser:

@@ -1,0 +1,13 @@
+components:
+  schemas:
+    Geolocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+      additionalProperties:
+        additionalProperties: false
