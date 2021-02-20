@@ -117,3 +117,10 @@ dist
 
 # ignore output from bundled spec yaml files
 bin
+
+# ignore openapi sdk generated files
+sdk
+openapitools.json
+
+# ignore compiled ts files
+js

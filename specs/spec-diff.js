@@ -2,12 +2,21 @@ const openapiDiff = require('openapi-diff');
 const yaml = require('js-yaml');
 const fs = require('fs');
 const fsPromises = require('fs').promises; 
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const argv = yargs(hideBin(process.argv)).argv;
 
 
-let sourceFileName = './output/api.yaml';
+// example:
+// npm run diff-script -- --specname=guest-users
+
+let apiSpecFileName = 'guest-users';
+//apiSpecFileName = argv.specname;
+
+let sourceFileName = `./output/${apiSpecFileName}.yaml`;
 const source = yaml.safeLoad(fs.readFileSync(sourceFileName, 'utf8'));
 
-let destinationFileName = './bin/api.yaml';
+let destinationFileName = `./bin/${apiSpecFileName}.yaml`;
 const destination = yaml.safeLoad(fs.readFileSync(destinationFileName, 'utf8'));
 
 
