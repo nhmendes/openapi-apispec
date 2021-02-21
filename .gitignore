@@ -120,7 +120,6 @@ bin
 
 # ignore openapi sdk generated files
 sdk
-openapitools.json
 
 # ignore compiled ts files
 js

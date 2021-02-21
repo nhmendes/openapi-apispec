@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "5.0.1",
+      "generators": {
+        "guestUsers.v1.0": {
+        "generatorName": "typescript-node",
+        "output": "sdk",
+        "glob": "bin/guest-users.yaml",
+        "additionalProperties": {
+          "swaggerAnnotations": true,
+          "serviceImplementation": true
+        }
+      }
+    }
+  }
+}

@@ -10,14 +10,14 @@
     "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/guest-users.yaml -d",
     "lint": "spectral lint ./bin/guest-users.yaml --ignore-unknown-format",
     "bundle": "swagger-cli bundle specs/guest-users.yaml -o ./bin/guest-users.yaml -t yaml",
-    "openapi-gen": "openapi-generator-cli generate -g typescript-node -o sdk -i bin/guest-users.yaml --additional-properties=swaggerAnnotations=true,serviceImplementation=true",
+    "openapi-gen": "openapi-generator-cli generate",
     "openapi-validate": "openapi-generator-cli validate -i ./bin/guest-users.yaml"
   },
   "dependencies": {
     "typescript": "^4.1.5"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.1.23",
+    "@openapitools/openapi-generator-cli": "^2.1.24",
     "@stoplight/prism-cli": "^4.1.2",
     "openapi-diff": "^0.23.4",
     "yargs": "^16.2.0"
