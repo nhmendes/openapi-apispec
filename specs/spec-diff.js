@@ -10,7 +10,8 @@ const argv = yargs(hideBin(process.argv)).argv;
 // example:
 // npm run diff-script -- --specname=guest-users
 
-let apiSpecFileName = 'guest-users';
+
+let apiSpecFileName = argv._[0];
 //apiSpecFileName = argv.specname;
 
 let sourceFileName = `./output/${apiSpecFileName}.yaml`;

@@ -1,0 +1,460 @@
+openapi: 3.0.3
+info:
+  title: 'Orders View [tce-order-view]'
+  description: API for searching customer orders.
+  version: 1.0.0
+  contact:
+    name: tce-orders-view API
+    email: nmendes@tillster.com
+servers:
+  - url: 'http://127.0.0.1:4010'
+tags:
+  - name: Orders View
+  - name: Health
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Ping the service for health status
+      description: Returns a the health status for search orders API
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Health Status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatusResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '504':
+          description: Gateway Timeout Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+        uri:
+          'Fn::Sub': 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resLambdaHealthGet.Arn}/invocations'
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+  /orders:
+    get:
+      operationId: searchOrders
+      summary: Searches orders by a match criteria
+      description: Returns a list of matching orders
+      tags:
+        - Orders View
+      parameters:
+        - in: header
+          required: true
+          name: Security-Context
+          schema:
+            type: string
+        - name: size
+          in: query
+          schema:
+            type: integer
+            format: int32
+          description: 'Number of results per call. Accepted values: 0 - 1000. Default 100.'
+        - name: start
+          in: query
+          schema:
+            type: string
+          description: This property is used to specify the initial point for each page to start searching the record in the index (OFFSET). Means it specifies from which record in an index should start searching.
+        - name: sortField
+          in: query
+          schema:
+            type: string
+          description: The field used to sort the retults (only one field is supported for sorting).
+        - name: sortDir
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: 'Determines the order direction for sorted results. Possible values: ''asc'' or ''desc''.'
+        - name: orderId
+          in: query
+          schema:
+            type: string
+          description: Order identified
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: The starting date for the time interval. If not filled an endDate - 2 months will be considered.
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: 'The ending date for the time interval. If not filled, it will default to the current date.'
+        - name: channelName
+          in: query
+          schema:
+            type: string
+          description: 'The name of the ordering channel (ConsumerAPI, Doordash, Postmates, Ubereats).'
+        - name: serviceType
+          in: query
+          schema:
+            type: string
+          description: 'The ways in which an order is fulfilled to the customer, i.e. Disposition (Pickup, DeliveryByChannel, etc).'
+        - name: paymentType
+          in: query
+          schema:
+            type: string
+          description: 'Type of payment (cash, credit).'
+        - name: userFirstName
+          in: query
+          schema:
+            type: string
+          description: The customer's first name.
+        - name: userLastName
+          in: query
+          schema:
+            type: string
+          description: The customer's last name.
+        - name: userEmail
+          in: query
+          schema:
+            type: string
+          description: The customer's email.
+        - name: userPhoneNumber
+          in: query
+          schema:
+            type: string
+          description: The customer's phone number (searchable by exact match).
+        - name: storeNumber
+          in: query
+          schema:
+            type: string
+          description: The store number (searchable by exact match).
+        - name: storeId
+          in: query
+          schema:
+            type: string
+          description: The store identifier (searchable by exact match).
+        - name: storeName
+          in: query
+          schema:
+            type: string
+          description: The store name.
+        - name: orderState
+          in: query
+          schema:
+            type: string
+          description: The status of an order as it flows through the system.
+        - name: failureReasonId
+          in: query
+          schema:
+            type: string
+          description: The reasonId that the order has failed.
+        - name: checkId
+          in: query
+          schema:
+            type: string
+          description: 'Check # returned from POS (searchable by exact match).'
+        - name: externalId
+          in: query
+          schema:
+            type: string
+          description: External ID if the order is generated outside of Tillster channels like aggregator sites.
+        - name: fields
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+            description: A comma-separated list of fields to return. Reference parameters of sub-objects with dot notation. If empty the base line resource properties is returned.
+        - name: exclude_fields
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+            description: A comma-separated list of fields to exclude. Reference parameters of sub-objects with dot notation.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/OrderSearchResponse'
+        '400':
+          description: Bad Request Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+        uri:
+          'Fn::Sub': 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resLambdaGuestUsersGetById.Arn}/invocations'
+        passthroughBehaviour: when_no_match
+        httpMethod: GET
+        type: aws_proxy
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: object
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        dbStatus:
+          type: string
+        version:
+          type: string
+        region:
+          type: string
+        environmentName:
+          type: string
+        logLevel:
+          type: string
+        executionTime:
+          type: integer
+          format: int32
+        dbResponseTime:
+          type: string
+        errors:
+          type: object
+          items:
+            type: array
+            items:
+              type: string
+    HealthStatusResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/HealthStatus'
+      required:
+        - result
+    OrderSearchRequest:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int32
+          description: 'Number of results per call. Accepted values: 0 - 1000. Default 100.'
+        start:
+          type: string
+          description: This property is used to specify the initial point for each page to start searching the record in the index (OFFSET). Means it specifies from which record in an index should start searching.
+        sortField:
+          type: string
+          description: The field used to sort the retults (only one field is supported for sorting).
+        sortDir:
+          type: string
+          enum:
+            - asc
+            - desc
+          description: 'Determines the order direction for sorted results. Possible values: ''asc'' or ''desc''.'
+        orderId:
+          type: string
+          description: Order identified
+        startDate:
+          type: string
+          format: date
+          description: The starting date for the time interval. If not filled an endDate - 2 months will be considered.
+        endDate:
+          type: string
+          format: date
+          description: 'The ending date for the time interval. If not filled, it will default to the current date.'
+        channelName:
+          type: string
+          description: 'The name of the ordering channel (ConsumerAPI, Doordash, Postmates, Ubereats).'
+        serviceType:
+          type: string
+          description: 'The ways in which an order is fulfilled to the customer, i.e. Disposition (Pickup, DeliveryByChannel, etc).'
+        paymentType:
+          type: string
+          description: 'Type of payment (cash, credit).'
+        userFirstName:
+          type: string
+          description: The customer's first name.
+        userLastName:
+          type: string
+          description: The customer's last name.
+        userEmail:
+          type: string
+          description: The customer's email.
+        userPhoneNumber:
+          type: string
+          description: The customer's phone number (searchable by exact match).
+        storeNumber:
+          type: string
+          description: The store number (searchable by exact match).
+        storeId:
+          type: string
+          description: The store identifier (searchable by exact match).
+        storeName:
+          type: string
+          description: The store name.
+        orderState:
+          type: string
+          description: The status of an order as it flows through the system.
+        failureReasonId:
+          type: string
+          description: The reasonId that the order has failed.
+        checkId:
+          type: string
+          description: 'Check # returned from POS (searchable by exact match).'
+        externalId:
+          type: string
+          description: External ID if the order is generated outside of Tillster channels like aggregator sites.
+        fields:
+          type: array
+          items:
+            type: string
+          description: A comma-separated list of fields to return. Reference parameters of sub-objects with dot notation. If empty the base line resource properties is returned.
+        excludeFields:
+          type: array
+          items:
+            type: string
+          description: A comma-separated list of fields to exclude. Reference parameters of sub-objects with dot notation.
+    OrderSearchResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    Address:
+      description: Guest User Address
+      type: object
+      properties:
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postcode:
+          type: string
+    Order:
+      type: object
+      properties:
+        orderId:
+          type: string
+        orderDate:
+          type: string
+        estimatedTime:
+          type: string
+        channelName:
+          type: string
+        channelTotal:
+          type: string
+        serviceType:
+          type: string
+        paymentType:
+          type: string
+        user:
+          type: object
+          properties:
+            userId:
+              type: string
+            firstName:
+              type: string
+            userLastName:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            address:
+              $ref: '#/components/schemas/Address'
+        store:
+          type: object
+          properties:
+            number:
+              type: string
+            storeId:
+              type: string
+            name:
+              type: string
+        currentOrderState:
+          type: object
+          properties:
+            key:
+              type: string
+            date:
+              type: string
+        failureReason:
+          type: string
+        checkId:
+          type: string
+        externalId:
+          type: string
+        items:
+          type: object
+          description: The items of the order.
+          properties:
+            description:
+              type: string
+              description: The name of an order item from the channel's order payload.
+            elementType:
+              type: string
+              description: 'This is an enum that designates the node''s order part (combo, product, etc).'
+            instructions:
+              type: string
+              description: Instructions associated with a modifier/product.
+            modifier:
+              type: string
+              description: The identifier that describes which modifier group an order item is associated with.
+            price:
+              type: string
+              description: The price of an order item from the channel's order payload.
+            quantity:
+              type: integer
+              format: int32
+              description: The quantity of the item.
+        subtotal:
+          type: string
+          description: 'The data that represents the subtotal, as given by the Channel.'
+        tax:
+          type: string
+          description: Tax value applied to the price.
+        StoreAddress:
+          $ref: '#/components/schemas/Address'
+        orderInstructions:
+          type: string
+          description: Instructions passed down for the order as a whole. e.g. please include utensils
+        deliveryInstructions:
+          type: string
+          description: 'Instructions passed down for the order, e.g. doorbell not working'

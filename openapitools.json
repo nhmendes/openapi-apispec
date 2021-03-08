@@ -5,9 +5,9 @@
     "version": "5.0.1",
       "generators": {
         "guestUsers.v1.0": {
-        "generatorName": "typescript-node",
+        "generatorName": "typescript-axios",
         "output": "sdk",
-        "glob": "bin/guest-users.yaml",
+        "glob": "bin/order-view.yaml",
         "additionalProperties": {
           "swaggerAnnotations": true,
           "serviceImplementation": true
