@@ -6,6 +6,7 @@
   "scripts": {
     "mock": "npm run generate; npm run prism-mock",
     "generate": "npm run bundle; npm run lint; npm run diff;",
+    "sdiff": "swagger-diff /Users/nunomendes/code/nmendes/openapi-apispec/output/order-view.yaml /Users/nunomendes/code/nmendes/openapi-apispec/bin/order-view.yaml",
     "diff": "node ./specs/spec-diff.js order-view",
     "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/order-view.yaml -d",
     "lint": "spectral lint ./bin/order-view.yaml --ignore-unknown-format",
@@ -22,7 +23,12 @@
     "@openapitools/openapi-generator-cli": "^2.1.24",
     "@stoplight/prism-cli": "^4.1.2",
     "openapi-diff": "^0.23.4",
-    "yargs": "^16.2.0"
+    "yargs": "^16.2.0",
+    "swagger-diff": "^0.6.0",
+    "wget-improved": "^3.2.1",
+    "wget": "^0.0.1",
+    "node-wget": "^0.4.3",
+    "https": "^1.0.0"
   },
   "author": "Nuno Mendes",
   "license": "MIT"

@@ -111,7 +111,7 @@ var api = new GuestUsersApiRequestFactory(config);
 
 
 /*
-const apigClientFactory = require("@tce/aws-api-gateway-client").default;
+const apigClientFactory = require("@aws-api-gateway-client").default;
 const stsParams = null;
 const credentialsFactory = new TemporaryCredentials(stsParams);
 var apiRequestService = new ApiRequestService(

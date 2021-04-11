@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: 'Orders View [tce-order-view]'
+  title: 'Orders View [order-view]'
   description: API for searching customer orders.
   version: 1.0.0
   contact:
-    name: tce-orders-view API
+    name: orders-view API
     email: nmendes@tillster.com
 servers:
   - url: 'http://127.0.0.1:4010'

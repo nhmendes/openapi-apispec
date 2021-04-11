@@ -1,0 +1,440 @@
+swagger: "2.0"
+host: myhost.com
+basePath: /order-view
+info:
+  title:
+    Fn::Sub: "${paramEnvironment} ${paramFeatureBranch}: ${paramServiceName} API"
+  description: API for searching orders
+  version: 0.1.0
+schemes:
+- https
+produces:
+- application/json
+paths:
+  "/health":
+    get:
+      produces:
+      - application/json
+      summary: Ping the service for health status
+      responses:
+        '200':
+          description: Health Status
+          schema:
+            "$ref": "#/definitions/HealthStatusResponse"
+        '500':
+          description: Internal Server Error
+          schema:
+            "$ref": "#/definitions/Error"
+        '504':
+          description: Gateway Timeout Error
+          schema:
+            "$ref": "#/definitions/Error"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resLambdaHealthGet.Arn}/invocations"
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+
+  "/order-summaries":
+    get:
+      produces:
+      - application/json
+      summary: "Searches orders by a match criteria"
+      tags:
+        - Orders View
+      parameters:
+        - in: header
+          name: Active-Tenant-Identifier
+          type: string
+          required: true
+        - name: size
+          in: query
+          type: integer
+          format: int32
+          description: "Number of results per call. Accepted values: 0 - 1000. Default 100."
+        - name: start
+          in: query
+          type: string
+          description: "This property is used to specify the initial point for each page to start searching the record in the index (OFFSET). Means it specifies from which record in an index should start searching."
+        - name: sortField
+          in: query
+          type: string
+          description: "The field used to sort the retults (only one field is supported for sorting)."
+        - name: sortDir
+          in: query
+          type: string
+          enum: [asc, desc]
+          description: "Determines the order direction for sorted results. Possible values: 'asc' or 'desc'."
+
+        - name: orderId
+          in: query
+          type: string
+          description: "Order identified"
+        - name: startDate
+          in: query
+          type: string
+          format: date-time
+          description: "The starting date for the time interval. If not filled an endDate - 2 months will be considered."
+        - name: endDate
+          in: query
+          type: string
+          format: date-time
+          description: "The ending date for the time interval. If not filled, it will default to the current date."
+        - name: channelName
+          in: query
+          type: string
+          description: "The name of the ordering channel (ConsumerAPI, Doordash, Postmates, Ubereats)."
+        - name: serviceType
+          in: query
+          type: string
+          description: "The ways in which an order is fulfilled to the customer, i.e. Disposition (Pickup, DeliveryByChannel, etc)."
+        - name: paymentType
+          in: query
+          type: string
+          description: "Type of payment (cash, credit)."
+        - name: userFirstName
+          in: query
+          type: string
+          description: "The customer's first name."
+        - name: userLastName
+          in: query
+          type: string
+          description: "The customer's last name."
+        - name: userEmail
+          in: query
+          type: string
+          description: "The customer's email."
+        - name: userPhoneNumber
+          in: query
+          type: string
+          description: "The customer's phone number (searchable by exact match)."
+        - name: storeNumber
+          in: query
+          type: string
+          description: "The store number (searchable by exact match)."
+        - name: storeName
+          in: query
+          type: string
+          description: "The store name."
+        - name: orderState
+          in: query
+          type: string
+          description: "The status of an order as it flows through the system."
+        - name: failureReasonId
+          in: query
+          type: string
+          description: "The reasonId that the order has failed."
+        - name: checkId
+          in: query
+          type: string
+          description: "Check # returned from POS (searchable by exact match)."
+        - name: externalId
+          in: query
+          type: string
+          description: "External ID if the order is generated outside of Tillster channels like aggregator sites."
+      responses:
+        "200":
+          description: 200 response with id of updated Data Group
+          schema:
+            "$ref": "#/definitions/OrderSummariesResponse"
+        '404':
+          description: Resource Not Found
+          schema:
+            "$ref": "#/definitions/Error"
+        '500':
+          description: Internal Server Error
+          schema:
+            "$ref": "#/definitions/Error"
+        '504':
+          description: Gateway Timeout Error
+          schema:
+            "$ref": "#/definitions/Error"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resLambdaOrderSummaries.Arn}/invocations"
+        passthroughBehaviour: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+
+  "/orders/{orderId}":
+    get:
+      operationId: getOrderById
+      summary: "Gets an order by id"
+      description: "Returns a result with a matching order"
+      tags:
+        - Orders View
+      parameters:
+        - name: Security-Context
+          in: header
+          required: true
+          type: string
+        - name: orderId
+          in: path
+          required: true
+          type: string
+          description: "Order identifier."
+      responses:
+        "200":
+          description: 200 response with id of updated Data Group
+          schema:
+            "$ref": "#/definitions/GetOrderResponse"
+        '404':
+          description: Resource Not Found
+          schema:
+            "$ref": "#/definitions/Error"
+        '500':
+          description: Internal Server Error
+          schema:
+            "$ref": "#/definitions/Error"
+        '504':
+          description: Gateway Timeout Error
+          schema:
+            "$ref": "#/definitions/Error"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${resLambdaOrdersGet.Arn}/invocations"
+        passthroughBehaviour: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+
+securityDefinitions:
+  authTokenAuthorizer:
+    description: Authentication will be performed using the custom token authorizer
+    type: apiKey
+    name: Authorization
+    in: header
+
+definitions:
+  HealthStatusResponse:
+    type: object
+    properties:
+      result:
+        "$ref": "#/definitions/HealthStatus"
+    required:
+    - result
+  Error:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        format: int32
+      message:
+        type: string
+      data:
+        type: object
+  HealthStatus:
+    type: object
+    properties:
+      status:
+        type: string
+      dbStatus:
+        type: string
+      version:
+        type: string
+      region:
+        type: string
+      environmentName:
+        type: string
+      logLevel:
+        type: string
+      executionTime:
+        type: integer
+        format: int32
+      dbResponseTime:
+        type: string
+      errors:
+        type: array
+        items:
+          type: string
+  OrderSummariesResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: "#/definitions/OrderSummary"
+        count:
+          type: number
+        size:
+          type: number
+        currentStart:
+          type: string
+        nextStart:
+          type: string
+  GetOrderResponse:
+    type: object
+    properties:
+      result:
+        $ref: "#/definitions/Order"
+
+  Address:
+    description: "Customer Address"
+    type: object
+    properties:
+      address1:
+        type: string
+      address2:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      postcode:
+        type: string
+
+  OrderSummary:
+    type: object
+    properties:
+      orderId1:
+        type: string
+      orderDate:
+        type: string
+      estimatedTime:
+        type: string
+      channelName:
+        type: string
+      channelTotal:
+        type: string
+      serviceType:
+        type: string
+      paymentType:
+        type: string
+      user:
+        type: object
+        properties:
+          userId:
+            type: string
+          firstName:
+            type: string
+          userLastName:
+            type: string
+          email:
+            type: string
+          phone:
+            type: string
+          address:
+            $ref: "#/definitions/Address"
+      store:
+        type: object
+        properties:
+          number:
+            type: string
+          storeId:
+            type: string
+          name:
+            type: string
+      currentOrderState:
+        type: object
+        properties:
+          key:
+            type: string
+          date:
+            type: string
+      failureReason:
+        type: string
+      checkId:
+        type: string
+      externalId:
+        type: string
+
+  Order:
+    type: object
+    properties:
+      orderId:
+        type: string
+      orderDate:
+        type: string
+      estimatedTime:
+        type: string
+      channelName:
+        type: string
+      channelTotal:
+        type: string
+      serviceType:
+        type: string
+      paymentType:
+        type: string
+      user:
+        type: object
+        properties:
+          userId:
+            type: string
+          firstName:
+            type: string
+          userLastName:
+            type: string
+          email:
+            type: string
+          phone:
+            type: string
+          address:
+            $ref: "#/definitions/Address"
+      store:
+        type: object
+        properties:
+          number:
+            type: string
+          storeId:
+            type: string
+          name:
+            type: string
+          address:
+            $ref: "#/definitions/Address"
+      currentOrderState:
+        type: object
+        properties:
+          key:
+            type: string
+          date:
+            type: string
+      failureReason:
+        type: string
+      checkId:
+        type: string
+      externalId:
+        type: string
+      items:
+        type: object
+        description: "The items of the order."
+        properties:
+          description:
+            type: string
+            description: "The name of an order item from the channel's order payload."
+          elementType:
+            type: string
+            description: "This is an enum that designates the node's order part (combo, product, etc)."
+          instructions:
+            type: string
+            description: "Instructions associated with a modifier/product."
+          modifier:
+            type: string
+            description: "The identifier that describes which modifier group an order item is associated with."
+          price:
+            type: string
+            description: "The price of an order item from the channel's order payload."
+          quantity:
+            type: integer
+            format: int32
+            description: "The quantity of the item."
+      subtotal:
+        type: string
+        description: "The data that represents the subtotal, as given by the Channel."
+      tax:
+        type: string
+        description: "Tax value applied to the price."
+      orderInstructions:
+        type: string
+        description: "Instructions passed down for the order as a whole. e.g. please include utensils"
+      deliveryInstructions:
+        type: string
+        description: "Instructions passed down for the order, e.g. doorbell not working"
