@@ -142,3 +142,19 @@ In this project the **mock** script will:
 
 - <https://www.markdownguide.org/>
 - <https://dillinger.io/>
+
+### Other stuff
+
+https://docs.npmjs.com/configuring-your-registry-settings-as-an-npm-enterprise-user
+
+Get profile registry
+
+```sh
+npm config get registry
+```
+
+Activate npmrc profile
+
+```sh
+npmrc <profile name>
+```
