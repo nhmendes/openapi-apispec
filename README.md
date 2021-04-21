@@ -123,6 +123,8 @@ We can also take advantage and add this in the process of continuous integration
 
 ## prism-mock
 
+> <https://github.com/stoplightio/prism/tree/master/docs/guides>
+
 You can fire-up a mock service using just the API Spec using a tool like **prism-mock**
 
 For starting a mock service in a local machine you can just execute this command (see package.json):
