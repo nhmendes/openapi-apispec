@@ -6,9 +6,9 @@
   "scripts": {
     "mock": "npm run generate; npm run prism-mock",
     "generate": "npm run bundle; npm run lint; npm run diff;",
-    "sdiff": "swagger-diff /Users/nunomendes/code/nmendes/openapi-apispec/output/order-view.yaml /Users/nunomendes/code/nmendes/openapi-apispec/bin/order-view.yaml",
+    "sdiff": "swagger-diff /Users/nunomendes/code/nmendes/openapi-apispec/output/order-view-swagger.yaml /Users/nunomendes/code/nmendes/openapi-apispec/bin/order-view-swagger.yaml",
     "diff": "node ./specs/spec-diff.js order-view",
-    "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/order-view.yaml -d",
+    "prism-mock": "npm run lint; npm run bundle; prism mock ./bin/order-view.yaml",
     "lint": "spectral lint ./bin/order-view.yaml --ignore-unknown-format",
     "bundle": "swagger-cli bundle specs/order-view.yaml -o ./bin/order-view.yaml -t yaml",
     "openapi-gen": "openapi-generator-cli generate",

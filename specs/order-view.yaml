@@ -192,6 +192,13 @@ paths:
             application/hal+json:
               schema:
                 $ref: "#/components/schemas/OrderSearchResponse"
+              examples:
+                order1:
+                  summary: example of an order
+                  value:
+                    orderId: "1"
+                    orderDate: "2021-04-12"
+                    channelName: "ubereats"
         "400":
           description: Bad Request Error
           content:
@@ -380,10 +387,12 @@ components:
           type: string
         orderDate:
           type: string
+          example: "2021-04-13"
         estimatedTime:
           type: string
         channelName:
           type: string
+          example: postmates
         channelTotal:
           type: string
         serviceType:
